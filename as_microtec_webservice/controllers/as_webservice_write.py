@@ -27,6 +27,7 @@ class as_webservice_microtec(http.Controller):
     def crear_factura_proveedor(self, **post):
         """ 
             tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
             http://10.0.10.66:14001/tiamerica/microtec/create_sale
         """
         post = request.jsonrequest
@@ -52,8 +53,8 @@ class as_webservice_microtec(http.Controller):
             res['sale_order_id'] = as_nueva_venta.id
             res['sale_order_name'] = as_nueva_venta.name
             res['status'] = 'Venta Creada'
-            res_json = json.dumps(res)
-            return '{0}({1})'.format(callback, res_json)
+            # res_json = json.dumps(res)
+            return '{0}({1})'.format(callback, res)
 
         else:
             return '{0}({1})'.format(callback, error_so_create)
