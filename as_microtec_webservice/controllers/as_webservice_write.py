@@ -10,6 +10,7 @@ import sys
 import uuid
 from odoo import http
 from odoo.http import request, Response
+from odoo.tests import tagged, Form
 
 import json
 import yaml
@@ -54,6 +55,20 @@ class as_webservice_microtec(http.Controller):
             res['sale_order_name'] = as_nueva_venta.name
             res['status'] = 'Venta Creada'
             # res_json = json.dumps(res)
+
+            #confirmar venta
+            as_nueva_venta.action_confirm()
+
+            #confirmar movimiento de inventario
+            for picking in as_nueva_venta.picking_ids:
+                wiz = picking.button_validate()
+                wiz = Form(request.env['stock.immediate.transfer'].with_context(wiz['context'])).save()
+                wiz.process()
+                #picking.action_confirm() probar si es que no esta en confirmado
+                # picking.action_assign()
+                # picking.button_validate()
+                # self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+
             return '{0}({1})'.format(callback, res)
 
         else:
