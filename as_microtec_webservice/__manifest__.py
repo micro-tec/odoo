@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name' : "TIAMERICA MICROTEC Webservices",
-    'version' : "1.1.0",
+    'version' : "1.1.2",
     'author'  : "TIAMERICA",
     'description': """
 Webservice Microtec
@@ -15,6 +15,9 @@ Webservice Microtec
         ],
     'website': 'http://www.ahorasoft.com',
     'data' : [
+        'security/ir.model.access.csv',
+        'views/as_tienda.xml',
+        'views/as_stock_warehouse.xml',
              ],
     'demo' : [],
     'installable': True,

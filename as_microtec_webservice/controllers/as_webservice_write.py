@@ -25,7 +25,7 @@ import os.path
 class as_webservice_microtec(http.Controller):
 
     @http.route(['/tiamerica/microtec/create_sale',], auth="public", type="json", method=['POST'], csrf=False)
-    def crear_factura_proveedor(self, **post):
+    def as_crear_venta(self, **post):
         """ 
             tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
             prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
@@ -73,5 +73,119 @@ class as_webservice_microtec(http.Controller):
 
         else:
             return '{0}({1})'.format(callback, error_so_create)
-        
 
+    @http.route(['/tiamerica/microtec/tienda/<int:tienda_id>','/tiamerica/microtec/tienda'], auth="public", type="json", method=['POST'], csrf=False)
+    def as_process_tienda(self, tienda_id=False, **post ):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo crear la tienda"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+
+            tienda = request.env['as.tienda']
+            res = {}
+
+            if tienda_id == False:
+                tienda_nueva = tienda.sudo().create(post)
+                tienda_id = tienda_nueva.id
+                res['id_tienda'] = tienda_id
+                res['status'] = 'Creado'
+                return '{0}({1})'.format(callback, res)
+            else:
+                search_tienda = tienda.sudo().search([('id', '=', tienda_id)])
+                search_tienda.update(post)
+                res['id_tienda'] = search_tienda.id
+                res['status'] = 'Actualizado'
+                return '{0}({1})'.format(callback, res)
+
+    @http.route(['/tiamerica/microtec/tienda/delete/<int:tienda_id>',], auth="public", type="json", method=['POST'], csrf=False)
+    def as_delete_tienda(self, tienda_id=False, **post ):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo borrar la tienda"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+            tienda = request.env['as.tienda']
+            res = {}
+
+            if tienda_id == False:
+                return '{0}({1})'.format(callback, error_so_create)
+            else:
+                search_tienda = tienda.sudo().search([('id', '=', tienda_id)])
+                search_tienda.update({"active":False})
+                res['id_tienda'] = search_tienda.id
+                res['status'] = 'Desactivado'
+                return '{0}({1})'.format(callback, res)
+
+    @http.route(['/tiamerica/microtec/almacen',], auth="public", type="json", method=['POST'], csrf=False)
+    def as_delete_almacen(self, **post ):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo crear el almacen"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+            almacen = request.env['stock.warehouse']
+            res = {}
+
+            almacen_nuevo = almacen.sudo().create(post)
+            almacen_id = almacen_nuevo.id
+            res['id_almacen'] = almacen_id
+            res['status'] = 'Creado'
+            return '{0}({1})'.format(callback, res)
