@@ -6,7 +6,9 @@
         <field name="model">as.tienda</field>
         <field name="arch" type="xml">
             <tree string="Tienda">
+                <field name="id"/>
                 <field name="name"/>
+                <field name="active"/>
             </tree>
         </field>
     </record>

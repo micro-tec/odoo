@@ -155,8 +155,8 @@ class as_webservice_microtec(http.Controller):
                 res['status'] = 'Desactivado'
                 return '{0}({1})'.format(callback, res)
 
-    @http.route(['/tiamerica/microtec/almacen',], auth="public", type="json", method=['POST'], csrf=False)
-    def as_delete_almacen(self, **post ):
+    @http.route(['/tiamerica/microtec/almacen/<int:almacen_id>','/tiamerica/microtec/almacen'], auth="public", type="json", method=['POST'], csrf=False)
+    def as_create_almacen(self, almacen_id=False, **post ):
         """ 
             tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
             prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
@@ -184,8 +184,15 @@ class as_webservice_microtec(http.Controller):
             almacen = request.env['stock.warehouse']
             res = {}
 
-            almacen_nuevo = almacen.sudo().create(post)
-            almacen_id = almacen_nuevo.id
-            res['id_almacen'] = almacen_id
-            res['status'] = 'Creado'
-            return '{0}({1})'.format(callback, res)
+            if almacen_id == False:
+                almacen_nuevo = almacen.sudo().create(post)
+                almacen_id = almacen_nuevo.id
+                res['id_almacen'] = almacen_id
+                res['status'] = 'Creado'
+                return '{0}({1})'.format(callback, res)
+            else:
+                search_almacen = almacen.sudo().search([('id', '=', almacen_id)])
+                search_almacen.update(post)
+                res['id_almacen'] = search_almacen.id
+                res['status'] = 'Actualizado'
+                return '{0}({1})'.format(callback, res)
