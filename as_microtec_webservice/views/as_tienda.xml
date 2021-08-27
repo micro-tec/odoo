@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="as_tienda_tree" model="ir.ui.view">
+        <field name="name">as.tienda.tree</field>
+        <field name="model">as.tienda</field>
+        <field name="arch" type="xml">
+            <tree string="Tienda">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="as_tienda_de_operaciones_form" model="ir.ui.view">
+        <field name="name">as.tienda.de.operaciones.form</field>
+        <field name="model">as.tienda</field>
+        <field name="arch" type="xml">
+            <form string="Tienda">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="as_nombre_corto"/>
+                        <field name="as_codigo_tienda"/>
+                        <field name="as_direccion"/>
+                        <field name="create_date"/>
+                        <field name="as_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="as_tienda_operaciones" model="ir.actions.act_window">
+        <field name="name">Tienda</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">as.tienda</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="as_tienda_tree"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Haga clic acá para agregar su tienda de operaciones.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action='as_tienda_operaciones' id='as_pos_tienda_operaciones' parent='stock.menu_stock_config_settings' sequence='100' />
+
+</odoo>
