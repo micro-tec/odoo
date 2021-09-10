@@ -196,3 +196,131 @@ class as_webservice_microtec(http.Controller):
                 res['id_almacen'] = search_almacen.id
                 res['status'] = 'Actualizado'
                 return '{0}({1})'.format(callback, res)
+
+    @http.route(['/tiamerica/microtec/create_product_category',], auth="public", type="json", method=['POST'], csrf=False)
+    def as_crear_categoria_producto(self, **post):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo crear la venta"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+            as_product_category = request.env['product.category'].sudo().create(post)
+            res['product_category_id'] = as_product_category.id
+            res['status'] = 'Categoria de productos creada'
+            res_json = json.dumps(res)
+
+            return '{0}({1})'.format(callback, res)
+
+        else:
+            return '{0}({1})'.format(callback, error_so_create)
+
+    @http.route(['/tiamerica/microtec/producto/<int:producto_id>','/tiamerica/microtec/producto'], auth="public", type="json", method=['POST'], csrf=False)
+    def as_process_producto(self, producto_id=False, **post ):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo crear el producto"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+
+            producto = request.env['product.template']
+            res = {}
+
+            if producto_id == False:
+                producto_nueva = producto.sudo().create(post)
+                producto_id = producto_nueva.id
+                res['id_producto'] = producto_id
+                res['status'] = 'Creado'
+                return '{0}({1})'.format(callback, res)
+            else:
+                search_producto = producto.sudo().search([('id', '=', producto_id)])
+                search_producto.update(post)
+                res['id_producto'] = search_producto.id
+                res['status'] = 'Actualizado'
+                return '{0}({1})'.format(callback, res)
+
+        else:
+            return '{0}({1})'.format(callback, error_so_create)
+
+    @http.route(['/tiamerica/microtec/cliente/<int:cliente_id>','/tiamerica/microtec/cliente'], auth="public", type="json", method=['POST'], csrf=False)
+    def as_process_cliente(self, cliente_id=False, **post ):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo crear el cliente"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+
+            cliente = request.env['res.partner']
+            res = {}
+
+            if cliente_id == False:
+                cliente_nueva = cliente.sudo().create(post)
+                cliente_id = cliente_nueva.id
+                res['id_cliente'] = cliente_id
+                res['status'] = 'Creado'
+                return '{0}({1})'.format(callback, res)
+            else:
+                search_cliente = cliente.sudo().search([('id', '=', cliente_id)])
+                search_cliente.update(post)
+                res['id_cliente'] = search_cliente.id
+                res['status'] = 'Actualizado'
+                return '{0}({1})'.format(callback, res)
+
+        else:
+            return '{0}({1})'.format(callback, error_so_create)
