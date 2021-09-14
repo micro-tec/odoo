@@ -324,3 +324,79 @@ class as_webservice_microtec(http.Controller):
 
         else:
             return '{0}({1})'.format(callback, error_so_create)
+
+    @http.route(['/tiamerica/microtec/create_diario',], auth="public", type="json", method=['POST'], csrf=False)
+    def as_crear_diario(self, **post):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo crear el diario"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+            as_diario = request.env['account.journal'].sudo().create(post)
+            res['journal_id'] = as_diario.id
+            res['status'] = 'Diario creado'
+            res_json = json.dumps(res)
+
+            return '{0}({1})'.format(callback, res)
+
+        else:
+            return '{0}({1})'.format(callback, error_so_create)
+
+    @http.route(['/tiamerica/microtec/create_factura',], auth="public", type="json", method=['POST'], csrf=False)
+    def as_crear_factura(self, **post):
+        """ 
+            tokedev: 4761b5d3f6474d1da7a6db5be87a097b34a67a42
+            prod: 112cbd5cbeff3cae4c162847d18c997d4d9a7481
+            http://10.0.10.66:14001/tiamerica/microtec/create_sale
+        """
+        post = request.jsonrequest
+
+        myapikey = request.httprequest.headers.get("Authorization")
+        error_auth = {			
+                        "RespCode":-1,
+                        "RespMessage":"Authorization no esta presente en el header"
+                    }
+        error_so_create = {			
+                        "RespCode":-1,
+                        "RespMessage":"No se pudo crear la factura"
+                    }
+        if not myapikey:
+            return error_auth
+        user_id = request.env["res.users.apikeys"]._check_credentials(scope="rpc", key=myapikey)
+        request.uid = user_id
+        res = {}
+        callback = post.get('callback')
+
+        if user_id:
+
+            # invoice = request.env['account.move'].with_context(default_move_type='out_invoice').create(post)
+            as_factura = request.env['account.move'].with_context(default_move_type='out_invoice').create(post)
+            res['move_id'] = as_factura.id
+            res['status'] = 'Factura creada'
+            res_json = json.dumps(res)
+
+            return '{0}({1})'.format(callback, res)
+
+        else:
+            return '{0}({1})'.format(callback, error_so_create)
+
+
