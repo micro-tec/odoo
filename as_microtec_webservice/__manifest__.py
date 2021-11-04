@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name' : "TIAMERICA MICROTEC Webservices",
-    'version' : "1.1.7",
+    'version' : "1.1.8",
     'author'  : "TIAMERICA",
     'description': """
 Webservice Microtec
