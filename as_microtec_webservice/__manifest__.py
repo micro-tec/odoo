@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name' : "TIAMERICA MICROTEC Webservices",
-    'version' : "1.1.5",
+    'version' : "1.1.7",
     'author'  : "TIAMERICA",
     'description': """
 Webservice Microtec
@@ -21,6 +21,8 @@ Webservice Microtec
         'views/as_res_partner_views.xml',
         'views/as_product_template_views.xml',
         'views/as_account_move.xml',
+        'views/as_purchase_order.xml',
+        'views/as_stock_picking.xml',
              ],
     'demo' : [],
     'installable': True,
