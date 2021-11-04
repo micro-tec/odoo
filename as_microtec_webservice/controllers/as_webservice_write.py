@@ -526,7 +526,7 @@ class as_webservice_microtec(http.Controller):
 
             # as_nueva_purchase_order = request.env['stock.picking'].sudo().create(post)
             res['picking'] = picking.name
-            # res['lot_id'] = move_line1.lot_id.id
+            res['lot_id'] = move_line1.lot_id.id
             res['status'] = 'Picking Creado'
             # res_json = json.dumps(res)
 
